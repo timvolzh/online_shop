@@ -29,7 +29,13 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'rest_framework',
 ]
 PROJECT_APPS = [
-
+    'abstracts.apps.AbstractsConfig',
+    'auths.apps.AuthsConfig',
+    'contacts.apps.ContactsConfig',
+    'goods.apps.GoodsConfig',
+    'locations.apps.LocationsConfig',
+    'orders.apps.OrdersConfig',
+    'shops.apps.ShopsConfig',
 ]
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
 
