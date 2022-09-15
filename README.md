@@ -17,7 +17,8 @@ urls.py вынесено в директорию urls
 
 ## Структура БД
 
-![db_sturucture](https://user-images.githubusercontent.com/91150884/190425782-d3ca7f12-9ac7-4adb-8e1a-cbe87be5ae2b.png)
+![Пустой диаграммой (1)](https://user-images.githubusercontent.com/91150884/190438696-b1c0c9d0-4fae-40fe-8c0d-f21a2382031c.png)
+
 
 
 
