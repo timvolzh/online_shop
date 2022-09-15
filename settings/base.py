@@ -13,11 +13,7 @@ sys.path.append(BASE_DIR)
 sys.path.append(
     os.path.join(BASE_DIR, "apps")
 )
-
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ROOT_URLCONF = 'urls.urls'
 
 # ----------------------------------------------
 # Apps
@@ -78,19 +74,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa
     },
 ]
-
-ROOT_URLCONF = 'urls.urls'
-
-
-WSGI_APPLICATION = 'orders.wsgi.application'
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 # ----------------------------------------------
 # Internationalization
