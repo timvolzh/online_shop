@@ -1,25 +1,26 @@
 Online shop project.
 
 
-settings.py переименован в base.py
-> settings.py -> base.py
-Дополнительные настройки вынесены в conf.py
-
-![Пустой диаграммой](https://user-images.githubusercontent.com/91150884/190425971-1dd63bdb-64b4-4d49-b97e-58fd90446bff.png)
-
 
 
 
 urls.py вынесено в директорию urls
 > urls.py -> urls\urls.py
 
+settings.py переименован в base.py
+> settings.py -> base.py
+
+Кастомные настройки вынесены в conf.py
+
+env хранит окружения для различных задач
+
+![Пустой диаграммой (1)](https://user-images.githubusercontent.com/91150884/190438947-70b64dde-f19d-4949-8313-e872ddea588e.png)
+
 
 
 ## Структура БД
 
-![Пустой диаграммой (1)](https://user-images.githubusercontent.com/91150884/190438696-b1c0c9d0-4fae-40fe-8c0d-f21a2382031c.png)
-
-
+![db_sturucture](https://user-images.githubusercontent.com/91150884/190438855-764c198c-7ba6-4541-a3dc-319286409f43.png)
 
 
 
