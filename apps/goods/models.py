@@ -2,8 +2,8 @@ from django.db.models import (
     CharField,
     ForeignKey,
     IntegerField,
+    ManyToManyField,
     CASCADE,  # Удаляет все связанные с ним строки после удаления в основе
-    RESTRICT,
 )
 
 from abstracts.models import AbstractDateTime
@@ -110,6 +110,11 @@ class Good(AbstractDateTime):
     product: ForeignKey = ForeignKey(
         to=Product,
         on_delete=CASCADE
+    )
+    parameters: ManyToManyField = ManyToManyField(
+        to=Parameter,
+        blank=True,
+        related_name="goods"
     )
 
     class Meta:

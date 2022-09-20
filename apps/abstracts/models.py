@@ -8,6 +8,8 @@ from django.db.models import (
 
 
 class AbstractDateTime(Model):
+    """AbstractDateTime model class."""
+
     datetime_created: DateTimeField = DateTimeField(
         verbose_name="время и дата создания",
         auto_now_add=True
@@ -23,12 +25,16 @@ class AbstractDateTime(Model):
     )
 
     class Meta:
+        """Customization of the table."""
+
         abstract = True
 
     def save(self, *args: tuple[Any], **kwargs: dict[str, Any]) -> None:
+        """Override the save method."""
         super().save(*args, **kwargs)
 
     def delete(self, *args: tuple[Any], **kwargs: dict[str, Any]) -> None:
+        """Override default delete moethod."""
         datetime_now: datetime = datetime.now()
         self.datetime_deleted = datetime_now
         self.save(

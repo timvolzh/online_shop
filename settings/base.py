@@ -14,6 +14,7 @@ sys.path.append(
     os.path.join(BASE_DIR, "apps")
 )
 ROOT_URLCONF = 'urls.urls'
+AUTH_USER_MODEL = 'auths.CustomUser'
 
 # ----------------------------------------------
 # Apps
