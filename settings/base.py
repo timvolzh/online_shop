@@ -28,6 +28,8 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'debug_toolbar',
+    'django_extensions',
 ]
 PROJECT_APPS = [
     'abstracts.apps.AbstractsConfig',
@@ -51,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 TEMPLATES = [
     {
