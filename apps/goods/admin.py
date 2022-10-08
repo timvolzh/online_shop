@@ -1,3 +1,47 @@
-from django.contrib import admin
+from django.contrib.admin import (
+    ModelAdmin,
+    register,
+)
 
-# Register your models here.
+from goods.models import (
+    Parameter,
+    Manufacture,
+    Category,
+    Product,
+    Good,
+)
+
+
+@register(Parameter)
+class ParameterAdmin(ModelAdmin):
+    """Parameter model admin customization."""
+
+    pass
+
+
+@register(Manufacture)
+class ManufactureAdmin(ModelAdmin):
+    """Manufacture db model customization on admin site."""
+
+    pass
+
+
+@register(Category)
+class CategoryAdmin(ModelAdmin):
+    """Category db model admin customization."""
+
+    pass
+
+
+@register(Product)
+class ProductAdmin(ModelAdmin):
+    """Product db model customization on admin site."""
+
+    pass
+
+
+@register(Good)
+class GoodAdmin(ModelAdmin):
+    """Good db model admin customization."""
+
+    pass
