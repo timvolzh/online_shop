@@ -10,6 +10,7 @@ from django.db.models import (
     EmailField,
     CharField,
     BooleanField,
+    QuerySet,
 )
 
 from abstracts.models import AbstractDateTime
@@ -88,6 +89,18 @@ class CustomUserManager(BaseUserManager):
         new_user.set_password(password)
         new_user.save(using=self._db)
         return new_user
+
+    def get_deleted(self) -> QuerySet:
+        """Get deleted users."""
+        return self.filter(
+            datetime_deleted__isnull=False
+        )
+
+    def get_not_deleted(self) -> QuerySet:
+        """Get not deleted users."""
+        return self.filter(
+            datetime_deleted__isnull=True
+        )
 
 
 class CustomUser(

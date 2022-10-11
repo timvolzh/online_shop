@@ -4,7 +4,24 @@ from datetime import datetime
 from django.db.models import (
     Model,
     DateTimeField,
+    QuerySet,
 )
+
+
+class AbstractDateTimeQuerySet(QuerySet):
+    """AbstractDateTimeQuerySet."""
+
+    def get_deleted(self) -> QuerySet[Model]:
+        """Get deleted users."""
+        return self.filter(
+            datetime_deleted__isnull=False
+        )
+
+    def get_not_deleted(self) -> QuerySet[Model]:
+        """Get not deleted users."""
+        return self.filter(
+            datetime_deleted__isnull=True
+        )
 
 
 class AbstractDateTime(Model):
@@ -23,6 +40,7 @@ class AbstractDateTime(Model):
         null=True,
         blank=True
     )
+    objects = AbstractDateTimeQuerySet.as_manager()
 
     class Meta:
         """Customization of the table."""
@@ -40,22 +58,3 @@ class AbstractDateTime(Model):
         self.save(
             update_fields=['datetime_deleted']
         )
-
-# save
-# UPDATE abstracts
-# SET datetime_created = "",
-#     datetime_updated = "",
-#     datetime_deleted = "2022-02-22 15:38"
-# ...
-
-# save (update_fields=["datetime_deleted"])
-# UPDATE abstracts
-# SET datetime_deleted = "2022-02-22 15:38"
-# ...
-
-
-# Monkey: def sayHi(self): print("Hi from monkey") a = 5
-# Person(Monkey): a = 10 def sayHi(self): print("Hi from Person", super().sayHi(), super().a)
-
-# p: Person = Person()
-# p.sayHi()  # Hi from Person Hi from Monkey
