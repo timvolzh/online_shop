@@ -8,6 +8,7 @@ from django.conf import settings
 from rest_framework.routers import DefaultRouter
 
 from apps.auths.views import CustomUserViewSet
+from apps.goods.views import GoodViewSet
 
 urlpatterns = [
     path(settings.ADMIN_SITE_URL, admin.site.urls),
@@ -23,7 +24,8 @@ if settings.DEBUG:
 #
 router: DefaultRouter = DefaultRouter(trailing_slash=False)
 
-router.register('auths/users', CustomUserViewSet, basename="users")
+router.register('auths/users', CustomUserViewSet)
+router.register('goods/goods', GoodViewSet)
 
 urlpatterns += [
     path(

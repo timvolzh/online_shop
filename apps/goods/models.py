@@ -28,6 +28,10 @@ class Parameter(AbstractDateTime):
         verbose_name_plural: str = "Параметры"
         ordering: tuple[str] = ("-id",)
 
+    def __str__(self) -> str:
+        """Return string representation of instance."""
+        return self.name
+
 
 class Manufacture(AbstractDateTime):
     """Manufactures database table."""
@@ -45,6 +49,10 @@ class Manufacture(AbstractDateTime):
         verbose_name: str = "Производитель"
         verbose_name_plural: str = "Производители"
         ordering: tuple[str] = ("-id",)
+
+    def __str__(self) -> str:
+        """Return string representation of instance."""
+        return self.name
 
 
 class Category(AbstractDateTime):
@@ -64,6 +72,10 @@ class Category(AbstractDateTime):
         verbose_name: str = "Категория"
         verbose_name_plural: str = "Категории"
         ordering: tuple[str] = ("-id",)
+
+    def __str__(self) -> str:
+        """Return string representation of instance."""
+        return self.name
 
 
 class Product(AbstractDateTime):
@@ -96,6 +108,10 @@ class Product(AbstractDateTime):
         verbose_name_plural: str = "Продукты"
         ordering: tuple[str] = ("-id",)
 
+    def __str__(self) -> str:
+        """Return string representation of instance."""
+        return self.name
+
 
 class Good(AbstractDateTime):
     """Goods database table."""
@@ -123,3 +139,7 @@ class Good(AbstractDateTime):
         verbose_name: str = "Товар"
         verbose_name_plural: str = "Товары"
         ordering: tuple[str] = ("-id",)
+
+    def __str__(self) -> str:
+        """Return string representation of instance."""
+        return self.name

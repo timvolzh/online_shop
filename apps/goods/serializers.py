@@ -4,16 +4,15 @@ from rest_framework.serializers import (
     DateTimeField,
 )
 
-
-from auths.models import CustomUser
 from abstracts.serializers import AbstractDateTimeSerializer
+from goods.models import Good, Product
 
 
-class CustomUserSerializer(
+class BaseProductModelSerializer(
     AbstractDateTimeSerializer,
     ModelSerializer
 ):
-    """CustomUserSerializer."""
+    """BaseProductSerializer."""
 
     is_deleted: SerializerMethodField = \
         AbstractDateTimeSerializer.is_deleted
@@ -23,22 +22,21 @@ class CustomUserSerializer(
     class Meta:
         """Customization of the Serializer."""
 
-        model: CustomUser = CustomUser
+        model: Product = Product
         fields: tuple[str] = (
-            "id",
-            "email",
-            "first_name",
-            "last_name",
+            "name",
+            "manufacture",
+            "category",
             "datetime_created",
             "is_deleted",
         )
 
 
-class DetailCustomUserSerializer(
+class BaseGoodModelSerializer(
     AbstractDateTimeSerializer,
     ModelSerializer
 ):
-    """DetailCustomUserSerializer."""
+    """ListGoodSerializer."""
 
     is_deleted: SerializerMethodField = \
         AbstractDateTimeSerializer.is_deleted
@@ -46,46 +44,40 @@ class DetailCustomUserSerializer(
         AbstractDateTimeSerializer.datetime_created
 
     class Meta:
-        """Customization of the table."""
+        """Customization of the Serializer."""
 
-        model: CustomUser = CustomUser
+        model: Good = Good
         fields: tuple[str] = (
             "id",
-            "email",
-            "first_name",
-            "last_name",
+            "name",
+            "price_rrc",
+            "product",
             "datetime_created",
             "is_deleted",
-            "is_staff",
-            "is_active",
-            "groups",
         )
 
 
-class CreateCustomUserSerializer(ModelSerializer):
-    """CreateCustomUserSerializer."""
+class ListGoodModelSerializer(BaseGoodModelSerializer):
+    """ListGoodModelSerializer."""
+
+    product: BaseProductModelSerializer = BaseProductModelSerializer()
+
+
+class DetailGoodModelSerializer(BaseGoodModelSerializer):
+    """DetailGoodModelSerializer."""
+
+    product: BaseProductModelSerializer = BaseProductModelSerializer()
 
     class Meta:
         """Customization of the Serializer."""
 
-        model: CustomUser = CustomUser
+        model: Good = Good
         fields: tuple[str] = (
-            "email",
-            "first_name",
-            "last_name",
-            "password",
-        )
-
-
-class ForeignCustomUserSerializer(ModelSerializer):
-    """ForeignCustomUserSerializer."""
-
-    class Meta:
-        """Customization of the Serializer."""
-
-        model: CustomUser = CustomUser
-        fields: tuple[str] = (
-            "email",
-            "first_name",
-            "last_name",
+            "id",
+            "name",
+            "price_rrc",
+            "product",
+            "datetime_created",
+            "is_deleted",
+            "parameters",
         )
