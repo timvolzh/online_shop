@@ -9,6 +9,7 @@ from goods.models import (
     Category,
     Product,
     Good,
+    GoodParameter,
 )
 
 
@@ -45,3 +46,15 @@ class GoodAdmin(ModelAdmin):
     """Good db model admin customization."""
 
     pass
+
+
+@register(GoodParameter)
+class GoodParameterAdmin(ModelAdmin):
+    """GoodParameterAdmin model on admin site."""
+
+    list_display: tuple[str] = (
+        "id",
+        "good",
+        "parameter",
+        "value",
+    )

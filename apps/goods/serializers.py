@@ -5,7 +5,48 @@ from rest_framework.serializers import (
 )
 
 from abstracts.serializers import AbstractDateTimeSerializer
-from goods.models import Good, Product
+from goods.models import (
+    Good,
+    Product,
+    Parameter,
+    GoodParameter,
+)
+from shops.serializers import (
+    ShopGoodModelSerializer,
+)
+
+
+class ParameterBaseModelSerializer(AbstractDateTimeSerializer, ModelSerializer):
+    """ParameterBaseModelSerializer."""
+
+    is_deleted: SerializerMethodField = \
+        AbstractDateTimeSerializer.is_deleted
+
+    class Meta:
+        """Customization of the Serializer."""
+
+        model: Parameter = Parameter
+        fields: tuple[str] = (
+            "id",
+            "name",
+            "is_deleted",
+        )
+
+
+class GoodParameterBaseModelSerializer(ModelSerializer):
+    """GoodParameterBaseModelSerializer."""
+
+    parameter: ParameterBaseModelSerializer = ParameterBaseModelSerializer()
+
+    class Meta:
+        """Customization of the serializer."""
+
+        model: GoodParameter = GoodParameter
+        fields: tuple[str] = (
+            "good_id",
+            "parameter",
+            "value",
+        )
 
 
 class BaseProductModelSerializer(
@@ -36,7 +77,7 @@ class BaseGoodModelSerializer(
     AbstractDateTimeSerializer,
     ModelSerializer
 ):
-    """ListGoodSerializer."""
+    """ListGoodSerializ ChatMembersListSerailizerer."""
 
     is_deleted: SerializerMethodField = \
         AbstractDateTimeSerializer.is_deleted
@@ -67,6 +108,12 @@ class DetailGoodModelSerializer(BaseGoodModelSerializer):
     """DetailGoodModelSerializer."""
 
     product: BaseProductModelSerializer = BaseProductModelSerializer()
+    parameters: GoodParameterBaseModelSerializer = \
+        GoodParameterBaseModelSerializer(source="goodparameter_set", many=True)
+    shops: ShopGoodModelSerializer = ShopGoodModelSerializer(
+        source="shopgood_set",
+        many=True
+    )
 
     class Meta:
         """Customization of the Serializer."""
@@ -80,4 +127,5 @@ class DetailGoodModelSerializer(BaseGoodModelSerializer):
             "datetime_created",
             "is_deleted",
             "parameters",
+            "shops",
         )

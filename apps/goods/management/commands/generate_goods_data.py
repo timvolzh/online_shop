@@ -1,8 +1,10 @@
 from datetime import datetime
 from random import (
     choice,
+    choices,
     randint,
 )
+from re import S
 from typing import (
     Any,
     Tuple,
@@ -16,6 +18,7 @@ from goods.models import (
     Parameter,
     Category,
     Product,
+    GoodParameter,
     Good,
 )
 from abstracts.models import AbstractDateTimeQuerySet
@@ -26,6 +29,8 @@ class Command(BaseCommand):
 
     MIN_RRC_PRICE = 1000
     MAX_RRC_PRICE = 20000
+
+    ONE_UNIT = 1
 
     def __init__(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> None:
         """Call parent constructor."""
@@ -97,6 +102,31 @@ class Command(BaseCommand):
             )
         print("Все товары успешно созданы")
 
+    def __generate_good_parameters(self) -> None:
+        """Generate good parameters."""
+        existed_goods: AbstractDateTimeQuerySet[int] = \
+            Good.objects.all().values_list("id", flat=True)
+        existed_parameters: AbstractDateTimeQuerySet[int] = \
+            Parameter.objects.all().values_list("id", flat=True)
+        goods_number: int = existed_goods.count()
+        result: list[GoodParameter] = []
+
+        i: int
+        j: int
+        for i in range(goods_number):
+            parameter: list[int] = choices(existed_parameters)
+            for par_id in parameter:
+                random_value: int = randint(self.ONE_UNIT, 10)
+                result.append(
+                    GoodParameter(
+                        good_id=existed_goods[i],
+                        parameter_id=par_id,
+                        value=f"Значение {random_value}"
+                    )
+                )
+        GoodParameter.objects.bulk_create(result)
+        print("Все параметры для товаров успешно созданы!")
+
     def handle(self, *args: Tuple[Any], **options: Dict[str, Any]) -> None:
         """Handle data filling."""
         start_time: datetime = datetime.now()
@@ -113,6 +143,7 @@ class Command(BaseCommand):
         self.__generate_categories(required_number=CATEGORIES_NUMBER)
         self.__generate_products(required_number=PRODUCTS_NUMBER)
         self.__generate_goods(required_number=GOODS_NUMBER)
+        self.__generate_good_parameters()
 
         print(
             "Генерация данных составила: {} секунд".format(

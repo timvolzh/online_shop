@@ -1,8 +1,12 @@
+from typing import Any
+
 from django.db.models import (
     CharField,
     ForeignKey,
     IntegerField,
     ManyToManyField,
+    Model,
+    UniqueConstraint,
     CASCADE,  # Удаляет все связанные с ним строки после удаления в основе
 )
 
@@ -129,8 +133,11 @@ class Good(AbstractDateTime):
     )
     parameters: ManyToManyField = ManyToManyField(
         to=Parameter,
+        through="GoodParameter",
+        through_fields=("good", "parameter"),
+        related_name="goods",
         blank=True,
-        related_name="goods"
+        verbose_name="Параметры товара"
     )
 
     class Meta:
@@ -143,3 +150,35 @@ class Good(AbstractDateTime):
     def __str__(self) -> str:
         """Return string representation of instance."""
         return self.name
+
+
+class GoodParameter(Model):
+    """GoodParameter db model."""
+
+    good: ForeignKey = ForeignKey(
+        to=Good,
+        on_delete=CASCADE,
+        verbose_name="Товар"
+    )
+    parameter: ForeignKey = ForeignKey(
+        to=Parameter,
+        on_delete=CASCADE,
+        verbose_name="Параметр"
+    )
+    value: CharField = CharField(
+        max_length=MAX_NAME_LENGTH,
+        verbose_name="Значение"
+    )
+
+    class Meta:
+        """Customization of the model."""
+
+        verbose_name: str = "Параметр товара"
+        verbose_name_plural: str = "Параметры товаров"
+        ordering: tuple[str] = ("id",)
+        constraints: list[Any] = [
+            UniqueConstraint(
+                fields=["good", "parameter"],
+                name="unique_good_parameter"
+            ),
+        ]

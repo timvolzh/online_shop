@@ -1,3 +1,4 @@
+from email.policy import default
 from typing import Any
 
 from django.db.models import (
@@ -15,6 +16,10 @@ from django.db.models import (
 from abstracts.models import AbstractDateTime
 
 from goods.models import Good
+from shops.validators import (
+    negative_price_validator,
+    negative_quantity_validator,
+)
 
 
 class Shop(AbstractDateTime):
@@ -65,7 +70,13 @@ class ShopGood(Model):
         verbose_name="Товар"
     )
     unit_price: IntegerField = IntegerField(
+        validators=[negative_price_validator],
         verbose_name="Цена за единицу товара"
+    )
+    remained_numbee: IntegerField = IntegerField(
+        default=0,
+        validators=[negative_quantity_validator],
+        verbose_name="Остаток товара"
     )
 
     class Meta:
