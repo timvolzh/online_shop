@@ -1,3 +1,8 @@
+from typing import (
+    Optional,
+    Any,
+)
+
 from django.db.models import QuerySet
 
 from rest_framework.request import Request as DRF_Request
@@ -14,12 +19,16 @@ class DRFResponseHandler:
         request: DRF_Request,
         data: QuerySet,
         serializer_class: Serializer,
-        many: bool = False
+        many: bool = False,
+        serializer_context: Optional[dict[str, Any]] = None
     ) -> DRF_Response:
         """Return DRF response."""
+        if not serializer_context:
+            serializer_context = {"request": request}
         serializer: Serializer = serializer_class(
             data,
-            many=many
+            many=many,
+            context=serializer_context
         )
         response: DRF_Response = DRF_Response(
             data={

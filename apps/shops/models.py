@@ -48,6 +48,10 @@ class Shop(AbstractDateTime):
         verbose_name="Товары магазина"
     )
 
+    def __str__(self) -> str:
+        """Override default method."""
+        return f"{self.name}"
+
     class Meta:
         """Database table configuration."""
 

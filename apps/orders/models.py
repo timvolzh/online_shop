@@ -25,6 +25,10 @@ class Status(AbstractDateTime):
         verbose_name="Имя статуса"
     )
 
+    def __str__(self) -> str:
+        """Override default magic method."""
+        return f"{self.name}"
+
     class Meta:
         """Customization of the Status table."""
 
@@ -39,6 +43,7 @@ class Order(AbstractDateTime):
     status: ForeignKey = ForeignKey(
         to=Status,
         on_delete=CASCADE,
+        default=1,
         related_name="orders",
         verbose_name="Статус"
     )
@@ -65,6 +70,10 @@ class Order(AbstractDateTime):
         blank=True,
         verbose_name="Товары"
     )
+
+    def __str__(self) -> str:
+        """Override defaulr magic method."""
+        return f"Заказ #{self.id}"
 
     class Meta:
         """Customization of the Order table."""
@@ -94,7 +103,7 @@ class OrderGood(Model):
         verbose_name="Количество"
     )
     quantity_price: IntegerField = IntegerField(
-        verbose_name="Цена за 1 товар"
+        verbose_name="Стоимость (тенге)"
     )
 
     class Meta:

@@ -21,11 +21,22 @@ class StatusAdmin(ModelAdmin):
 class OrderAdmin(ModelAdmin):
     """Order db model customization on admin site."""
 
-    pass
+    list_display: tuple[str] = (
+        "id",
+        "status",
+        "from_shop",
+        "orderer",
+        "total_sum",
+    )
 
 
 @register(OrderGood)
 class OrderGoodAdmin(ModelAdmin):
     """Order Good db model customization on admin site."""
 
-    pass
+    list_display: tuple[str] = (
+        "order",
+        "good",
+        "quantity",
+        "quantity_price",
+    )

@@ -85,6 +85,7 @@ class ForeignCustomUserSerializer(ModelSerializer):
 
         model: CustomUser = CustomUser
         fields: tuple[str] = (
+            "id",
             "email",
             "first_name",
             "last_name",
