@@ -8,7 +8,9 @@ from settings.conf import *  # noqa
 # ----------------------------------------------
 # Path
 #
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))
+)
 sys.path.append(BASE_DIR)
 sys.path.append(
     os.path.join(BASE_DIR, "apps")
@@ -28,6 +30,7 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework_simplejwt',
     'debug_toolbar',
     'django_extensions',
 ]

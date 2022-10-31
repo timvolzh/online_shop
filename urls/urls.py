@@ -1,3 +1,9 @@
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
+
 from django.contrib import admin
 from django.urls import (
     path,
@@ -16,6 +22,21 @@ from apps.orders.views import (
 
 urlpatterns = [
     path(settings.ADMIN_SITE_URL, admin.site.urls),
+    path(
+        'api/token/',
+        TokenObtainPairView.as_view(),
+        name='token_obtain_pair'
+    ),
+    path(
+        'api/token/refresh/',
+        TokenRefreshView.as_view(),
+        name='token_refresh'
+    ),
+    path(
+        'api/token/verify/',
+        TokenVerifyView.as_view(),
+        name='token_verify'
+    ),
 ]
 
 if settings.DEBUG:
