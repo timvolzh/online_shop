@@ -4,13 +4,16 @@ from random import choice
 from typing import (
     Any,
     Tuple,
+    Optional,
     Dict,
 )
 
 from django.core.management.base import BaseCommand
 from django.contrib.auth.hashers import make_password
+from django.db.models import QuerySet
 
 from auths.models import CustomUser
+from shops.models import Shop
 
 
 class Command(BaseCommand):
@@ -20,6 +23,7 @@ class Command(BaseCommand):
         "mail.ru", "gmail.com", "outlook.com", "yahoo.com",
         "inbox.ru", "yandex.kz", "yandex.ru", "mail.kz",
     )
+    __worker_states: tuple[bool] = (True, False,)
 
     def __init__(self, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> None:
         """Call parent constructor."""
@@ -40,8 +44,20 @@ class Command(BaseCommand):
             PASSWORD_PATTERN = "12345"
             return make_password(PASSWORD_PATTERN)
 
+        def isWorker() -> bool:
+            return choice(self.__worker_states)
+
+        existed_shops_id: QuerySet[int] = Shop.objects.all().values_list(
+            "id",
+            flat=True
+        )
+
         i: int
         for i in range(required_number):
+            shop_id: Optional[int] = None
+            if isWorker():
+                shop_id = choice(existed_shops_id)
+
             first_name: str = get_name()
             last_name: str = get_surname()
             email: str = get_email(
@@ -52,6 +68,7 @@ class Command(BaseCommand):
                 email=email,
                 first_name=first_name,
                 last_name=last_name,
+                shop_id=shop_id,
                 password=generate_password()
             )
         print(f"{required_number} пользователей успешно созданы")

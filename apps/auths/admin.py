@@ -27,6 +27,7 @@ class CustomUserAdmin(UserAdmin):
         "is_staff",
         "is_superuser",
         "get_is_deleted",
+        "shop",
     )
     list_display_links: Sequence[str] = (
         "id",
@@ -53,6 +54,7 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "email",
                     ("first_name", "last_name",),
+                    "shop",
                 )
             }
         ),
@@ -86,6 +88,7 @@ class CustomUserAdmin(UserAdmin):
                     "email",
                     "first_name",
                     "last_name",
+                    "shop",
                     "is_active",
                     "is_staff",
                     "is_superuser",

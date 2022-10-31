@@ -10,10 +10,13 @@ from django.db.models import (
     EmailField,
     CharField,
     BooleanField,
+    ForeignKey,
     QuerySet,
+    CASCADE,
 )
 
 from abstracts.models import AbstractDateTime
+from shops.models import Shop
 
 
 class CustomUserManager(BaseUserManager):
@@ -131,6 +134,14 @@ class CustomUser(
     is_staff: BooleanField = BooleanField(
         default=False,
         verbose_name="Статус менеджера"
+    )
+    shop: ForeignKey = ForeignKey(
+        to=Shop,
+        on_delete=CASCADE,
+        blank=True,
+        null=True,
+        related_name="employees",
+        verbose_name="Работник магазина"
     )
     objects = CustomUserManager()
 
