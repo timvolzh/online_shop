@@ -14,6 +14,11 @@ from abstracts.models import AbstractDateTime
 
 
 MAX_NAME_LEN = 254
+STATUS_IN_PROCESS = 1
+STATUS_REJECTED = 2
+STATUS_OK = 3
+STATUS_ISSUED = 4
+STATUS_ON_THE_WAY = 5
 
 
 class Status(AbstractDateTime):
@@ -43,7 +48,7 @@ class Order(AbstractDateTime):
     status: ForeignKey = ForeignKey(
         to=Status,
         on_delete=CASCADE,
-        default=1,
+        default=STATUS_IN_PROCESS,
         related_name="orders",
         verbose_name="Статус"
     )

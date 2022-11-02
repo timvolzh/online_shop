@@ -16,6 +16,7 @@ from rest_framework import status
 from orders.models import (
     Order,
     OrderGood,
+    STATUS_OK,
 )
 from orders.serializers import (
     OrderBaseModelSerializer,
@@ -25,8 +26,10 @@ from orders.serializers import (
     OrderGoodBaseModelSerializer,
     OrderGoodViewModelSerializer,
 )
+from orders.utils import email_changed_order_status
 from abstracts.mixins import ModelInstanceMixin
 from abstracts.handlers import DRFResponseHandler
+from auths.permissions import IsShopManagerOrAdmin
 from abstracts.models import AbstractDateTimeQuerySet
 
 
@@ -165,6 +168,85 @@ class OrderViewSet(ModelInstanceMixin, DRFResponseHandler, ViewSet):
             data=order,
             serializer_class=OrderDetailModelSerializer
         )
+
+    def update(
+        self,
+        request: DRF_Request,
+        pk: int,
+        *args: tuple[Any],
+        **kwargs: dict[str, Any]
+    ) -> DRF_Response:
+        """Handle PUT-request method with provided id."""
+        is_partial: bool = kwargs.get("is_partial", False)
+        order: Optional[Order] = self.get_queryset_instance_by_id(
+            class_name=Order,
+            queryset=self.queryset,
+            pk=pk
+        )
+        if not order:
+            return DRF_Response(
+                data={
+                    "response": f"Данный заказ с iD {pk} не найден"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        data_copy: dict[str, Any] = request.data.copy()
+        change_fields: Optional[dict[str, Any]] = kwargs.get("status", None)
+        if change_fields:
+            data_copy["status"] = change_fields
+
+        serializer: OrderBaseModelSerializer = self.serializer_class(
+            instance=order,
+            data=data_copy,
+            partial=is_partial
+        )
+        serializer.is_valid(raise_exception=True)
+        updated_order: Order = serializer.save()
+        return self.get_drf_response(
+            request=request,
+            data=updated_order,
+            serializer_class=OrderDetailModelSerializer
+        )
+
+    def partial_update(
+        self,
+        request: DRF_Request,
+        pk: int,
+        *args: tuple[Any],
+        **kwargs: dict[str, Any]
+    ) -> DRF_Response:
+        """Handle PATCH method with provided id."""
+        kwargs['is_partial'] = True
+        return self.update(request, pk, *args, **kwargs)
+
+    @action(
+        methods=["patch"],
+        detail=True,
+        url_path="confirm",
+        permission_classes=(
+            IsShopManagerOrAdmin,
+        )
+    )
+    def confirm(
+        self,
+        request: DRF_Request,
+        pk: int,
+        *args: tuple[Any],
+        **kwargs: dict[str, Any]
+    ) -> DRF_Response:
+        """Handle PATCH-request for order confirming."""
+        kwargs['is_partial'] = True
+        kwargs['status'] = STATUS_OK
+        response: DRF_Response = self.update(request, pk, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            order: Order = Order.objects.get(id=pk)
+            email_changed_order_status(
+                order_id=pk,
+                new_status="подтверждён",
+                receivers=[request.user.email, order.orderer.email]
+            )
+        return response
 
 
 class OrderGoodViewSet(ModelInstanceMixin, DRFResponseHandler, ViewSet):

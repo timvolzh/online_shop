@@ -6,6 +6,16 @@ from datetime import timedelta
 #
 SECRET_KEY = 'django-insecure-qhr9@h9ywr89w4&0c)n7!^o#*u0u^hov)q-#&_p*i15y%kj1^4'  # noqa
 
+# ------------------------------------------------
+# Email configuration
+#
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''  # your email
+EMAIL_HOST_PASSWORD = ''  # take from the GO file
+EMAIL_PORT = 587
+
 # ----------------------------------------------
 # Custom settings
 #
