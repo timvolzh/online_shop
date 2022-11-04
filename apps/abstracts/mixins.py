@@ -6,10 +6,27 @@ from django.db.models import (
 )
 
 from abstracts.models import AbstractDateTimeQuerySet
+from auths.models import CustomUser
 
 
 class ModelInstanceMixin:
     """MIxin for getting instance."""
+
+    def get_queryset_instance(
+        self,
+        class_name: Model,
+        queryset: QuerySet,
+        pk: int = 0,
+    ) -> Optional[Model]:
+        """Get class instance by PK with provided queryset."""
+        if not isinstance(queryset, QuerySet):
+            return None
+        obj: Optional[Model] = None
+        try:
+            obj = queryset.get(pk=pk)
+            return obj
+        except class_name.DoesNotExist:
+            return None
 
     def get_queryset_instance_by_id(
         self,
@@ -20,7 +37,7 @@ class ModelInstanceMixin:
     ) -> Optional[Model]:
         """Get class instance by PK with provided queryset."""
         if not isinstance(queryset, AbstractDateTimeQuerySet):
-            raise None
+            return None
         obj: Optional[Model] = None
         try:
             if is_deleted:

@@ -9,9 +9,13 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response as DRF_Response
 from rest_framework.request import Request as DRF_Request
 from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import QuerySet
 
+from abstracts.mixins import ModelInstanceMixin
+from abstracts.handlers import DRFResponseHandler
 from auths.models import (
     CustomUser,
     CustomUserManager,
@@ -21,9 +25,10 @@ from auths.serializers import (
     DetailCustomUserSerializer,
     CreateCustomUserSerializer,
 )
+from orders.serializers import OrderListModelSerializer
 
 
-class CustomUserViewSet(ViewSet):
+class CustomUserViewSet(ModelInstanceMixin, DRFResponseHandler, ViewSet):
     """CustomUserViewSet."""
 
     queryset: CustomUserManager = CustomUser.objects
@@ -138,3 +143,43 @@ class CustomUserViewSet(ViewSet):
             data=serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
+    @action(
+        methods=["get"],
+        detail=True,
+        url_path="orders",
+        permission_classes=(
+            IsAuthenticated,
+        )
+    )
+    def get_owner_orders(
+        self,
+        request: DRF_Request,
+        pk: int,
+        *args: tuple[Any],
+        **kwargs: dict[str, Any]
+    ) -> DRF_Response:
+        """Handle detailed GET-request."""
+        user: Optional[CustomUser] = self.get_queryset_instance(
+            class_name=CustomUser,
+            queryset=self.get_queryset(),
+            pk=pk
+        )
+        if not user:
+            return DRF_Response(
+                data={
+                    "response": "Данный пользователь не найден"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        response: DRF_Response = self.get_drf_response(
+            request=request,
+            data=user.orders.all().select_related(
+                "status"
+            ).select_related(
+                "from_shop"
+            ),
+            serializer_class=OrderListModelSerializer,
+            many=True
+        )
+        return response
