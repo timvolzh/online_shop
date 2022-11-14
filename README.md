@@ -1,5 +1,6 @@
 Online shop project.
 
+manage.py заменен на online_shop/settings/env/local.py  
 
 
 
