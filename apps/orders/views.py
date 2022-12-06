@@ -26,7 +26,8 @@ from orders.serializers import (
     OrderGoodBaseModelSerializer,
     OrderGoodViewModelSerializer,
 )
-from orders.utils import email_changed_order_status
+# from orders.utils import email_changed_order_status
+from utils.celery_app import email_changed_order_status
 from abstracts.mixins import ModelInstanceMixin
 from abstracts.handlers import DRFResponseHandler
 from auths.permissions import IsShopManagerOrAdmin
@@ -241,7 +242,7 @@ class OrderViewSet(ModelInstanceMixin, DRFResponseHandler, ViewSet):
         response: DRF_Response = self.update(request, pk, *args, **kwargs)
         if response.status_code == status.HTTP_200_OK:
             order: Order = Order.objects.get(id=pk)
-            email_changed_order_status(
+            email_changed_order_status.delay(
                 order_id=pk,
                 new_status="подтверждён",
                 receivers=[request.user.email, order.orderer.email]

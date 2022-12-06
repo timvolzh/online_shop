@@ -1,5 +1,21 @@
 Online shop project.
 
+### Запуск
+```commandline
+# Запускаем контейнер с БД Redis
+docker-compose up
+
+# Запускаем процессы Celery
+celery -A utils.celery_app.celery_app worker -c 5
+
+# Запускаем проект
+python manage.local.py runserver
+
+```
+
+
+
+
 manage.py заменен на online_shop/settings/env/local.py  
 
 
