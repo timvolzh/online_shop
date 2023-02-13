@@ -4,6 +4,8 @@ from datetime import timedelta
 # ----------------------------------------------
 # Enviromental variables
 #
+import rest_framework.throttling
+
 SECRET_KEY = 'django-insecure-qhr9@h9ywr89w4&0c)n7!^o#*u0u^hov)q-#&_p*i15y%kj1^4'  # noqa
 
 # ------------------------------------------------
@@ -25,7 +27,15 @@ ADMIN_SITE_URL = "custom_admin/"
 # DRF settings
 #
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',)
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    'DEFAULT_THROTTLE_CLASSES': ('rest_framework.throttling.UserRateThrottle',
+                                 'rest_framework.throttling.AnonRateThrottle',
+                                 ),
+    'DEFAULT_THROTTLE_RATES': {'user': '50/minute',
+                               'anon': '10/minute',
+                               },
+
+
 }
 
 # ----------------------------------------------
